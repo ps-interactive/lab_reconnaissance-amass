@@ -1,0 +1,109 @@
+# =============================================================
+# SCOPE SECTION
+# Defines the boundaries of your engagement. Amass will use these
+# to determine which assets are "in-scope" for active scanning.
+# =============================================================
+scope:
+# The root domain(s) you are investigating. Amass will find subdomains
+# ending in these suffixes.
+  domains: # registered domain names in scope
+    - example.com
+#  ips: # IP addresses in scope, multiple methods of inserting IP addresses can be used
+#    - 192.0.2.1
+#    - 192.0.2.2
+#    - 192.168.0.3-8
+#    - 192.168.0.10-192.168.0.20
+#  cidrs: # CIDR ranges that are in scope
+#    - 192.0.2.0/24
+#    - 192.0.2.128/25
+  ports: # ports to be used when actively scanning services
+    - 80
+    - 443
+    - 8000
+    - 8080
+    - 8443
+    - 8888
+#  blacklist: # subdomains to be blacklisted
+#    - example.owasp.org
+# =============================================================
+# OPTIONS SECTION
+# Controls the engine's behavior, database connections, and 
+# enumeration techniques.
+# =============================================================
+options:
+# Path to the separate file containing API keys (names TODO).
+  # Keeping this separate allows you to share config.yaml without leaking secrets.
+  datasources: "./datasources.yaml"
+  # engine: "http://127.0.0.1:4000/graphql"
+  # database: "bolt://neo4j:amass4OWASP@neo4j:7687/neo4j"
+  database: "postgres://amass:amass4OWASP@localhost:5432/assetdb"
+  bruteforce:
+    enabled: true
+    wordlists: # wordlist(s) specific to FQDN brute forcing
+      - "./namelist.txt"
+# Alterations: Generating new names based on found names (e.g., api -> api-dev).
+# This is highly effective for discovering shadow IT and dev environments.
+  alterations:
+    enabled: true
+    wordlists: # wordlist(s) specific to name alterations
+      - "./alterations.txt"
+
+# Global defaults for how the engine handles data "freshness" and trust.
+  default_transform_values:
+    # Time-To-Live (minutes). 1440 mins = 24 hours.
+    # If a piece of data is found within 24 hours, Amass reuses it from the DB
+    # instead of querying the internet again.
+    ttl: 1440 # minutes. If not specified, the default is 1440 minutes (1 day)
+    # Confidence (0-100%). Amass assigns confidence scores to findings.
+    # This sets a threshold: discard findings with less than 50% confidence.
+    confidence: 50 # 50%
+    # Priority (1-10). Determines the urgency of processing this data in the queue.
+    priority: 5
+
+# =============================================================
+# TRANSFORMATIONS SECTION
+# This controls the "Logic" of the Amass Engine.
+# Allows you to fine-tune caching (TTL) per specific asset relationship.
+# =============================================================
+transformations:
+  Account->ALL: # -> ALL means "Allow any transformation starting from an Account asset."
+    ttl: 1080 # 7 days
+  AutnumRecord->ALL:  # ASN Registration data.
+  AutonomousSystem->ALL: # ASNs (Autonomous System Numbers).
+  AutonomousSystem->RDAP: # Specific rule: When going from AS to RDAP (Registration Data Access Protocol),
+    ttl: 43200 # cache the result for 30 days (43200 mins) because AS ownership rarely changes.
+  ContactRecord->ALL: # Contact info (emails/names) found in WHOIS/TLS certs.
+  DomainRecord->ALL: # WHOIS Domain records
+  File->ALL: # Files found (e.g., PDFs, configs).
+  FQDN->ALL: # FQDN (Fully Qualified Domain Name) - The core asset of most scans.
+  FQDN->DNS: # FQDN to DNS is a very common lookup (A, AAAA, CNAME records).
+    ttl: 1440 # Kept at 24 hours (1440 mins) to balance freshness with performance.
+  FQDN->DomainRecord: # FQDN to DomainRecord implies a WHOIS lookup.
+    ttl: 43200 # 30 days # WHOIS data is static; caching for 30 days reduces traffic significantly.
+  FundsTransfer->ALL: # Financial transactions (Crypto/Wire) linked to assets.
+    ttl: 1080 # 7 days
+  Identifier->ALL: # Generic Identifiers (Product IDs, unique strings).
+  Identifier->GLEIF: # Global Legal Entity Identifier Foundation lookups. Very static data.
+    ttl: 43200 # 30 days
+  Identifier->RDAP: # RDAP lookups for identifiers.
+    ttl: 43200 # 30 days
+  IPAddress->ALL: # IP Addresses (v4 and v6).
+  IPNetRecord->ALL: # IP Network Registration data (WHOIS for IPs).
+  Location->ALL: # Physical Locations (Addresses, Coordinates).
+  Netblock->ALL: # Netblocks (CIDR ranges).
+  Netblock->RDAP: # Netblock ownership data (RDAP). Very static.
+    ttl: 43200 # 30 days
+  Organization->ALL: # Organizations (Companies, NGOs).
+  Organization->GLEIF: # Organization lookups in GLEIF database.
+    ttl: 43200 # 30 days
+  Person->ALL: # People (Registrants, Employees).
+    ttl: 43200 # 30 days
+  Phone->ALL: # Phone numbers.
+    ttl: 1080 # 7 days 
+  Product->ALL: # Software/Hardware products (e.g., "Apache 2.4").
+    ttl: 10080 # 7 days
+  ProductRelease->ALL: # Specific versions of products.
+  Service->ALL: # Network Services (e.g., SSH on port 22, HTTP on 80).
+  TLSCertificate->ALL:  # SSL/TLS Certificates.
+    ttl: 10080 # 7 days
+  URL->ALL: # URLs discovered (often via crawling or OTX).

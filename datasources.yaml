@@ -1,0 +1,207 @@
+# these are the global options related to data sources.
+global_options:
+# minimum_ttl is the default used when datasources don't specify a larger ttl value.
+  minimum_ttl: 1440 #one day
+
+# uncomment and add credentials for data sources that you'd like to be used by the engine
+datasources:
+ # SecurityTrails: Provides extensive current and historical DNS data and domain information.
+ - name: SecurityTrails
+   ttl: 1440
+   creds:
+     account: 
+       apikey: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+
+ # VirusTotal: Analyze suspicious files and URLs; acts as a passive DNS source for subdomain discovery.
+ - name: VirusTotal
+   ttl: 10080
+   creds:
+     account: 
+       apikey: "f1e2d3c4b5a69876543210fedcba09876543210fedcba09876543210fedcba"
+
+ # Shodan: A search engine for Internet-connected devices, used to discover assets via service banners.
+ - name: Shodan
+   ttl: 10080
+   creds:
+     account: 
+       apikey: "S1h2o3d4a5n6A7P8I9K0e1y2"
+ # AlienVault (OTX): Open Threat Exchange providing crowd-sourced threat intelligence and passive DNS data.
+ - name: AlienVault
+   creds:
+     account: 
+       apikey: "a1l2i3e4n5v6a7u8l9t0O1T2X3K4e5y6"
+
+ # URLScan: A sandbox for scanning and analyzing websites, useful for finding related subdomains and resources.
+ - name: URLScan
+   creds:
+     account: 
+       apikey: "u1r2l3s4-c5a6-n7i8-o9p0-k1e2y3t4o5k6"
+ # HackerTarget: Hosted IP and DNS intelligence tools offering data for attack surface mapping.
+ - name: HackerTarget
+   ttl: 1440
+   creds:
+     account: 
+       apikey: "h1a2c3k4e5r6t7a8r9g0e1t2"
+
+ # GitHub: Development platform; used to find assets, secrets, and subdomains leaked in code repositories.
+ - name: GitHub
+   ttl: 4320
+   creds:
+     accountname: 
+       apikey: "g1i2t3h4u5b6_p7a8t9_t0o1k2e3n4"
+
+ # GitLab: DevOps platform; similar to GitHub, used to find assets and credentials in public repositories.
+ - name: GitLab
+   ttl: 4320
+   creds:
+     accountname: 
+       apikey: "glpat-1a2b3c4d5e6f7g8h9i0j"
+
+ # BufferOver: A project providing rapid access to massive DNS datasets for subdomain enumeration.
+ - name: BufferOver
+   creds:
+     account: 
+       apikey: "b1u2f3f4e5r6o7v8e9r0"
+ # CertCentral: DigiCert's platform for certificate management; facilitates discovery via SSL/TLS certificate transparency.
+ - name: CertCentral
+   creds:
+     account: 
+       username: "admin@example.com"
+       apikey: "c1e2r3t4C5e6n7t8r9a0l1"
+
+ # Chaos: ProjectDiscovery's internet-wide asset data project for massive scale subdomain discovery.
+ - name: Chaos
+   ttl: 4320
+   creds:
+     account: 
+       apikey: "c1h2a3o4s5_p6r7o8j9e0c1t2"
+
+ # CIRCL: Computer Incident Response Center Luxembourg; provides a passive DNS database for historical record analysis.
+ - name: CIRCL
+   creds:
+     account: 
+       username: "researcher@example.com"
+       password: "dummy_password_123!"
+#  - name: 360PassiveDNS
+#    ttl: 3600
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: ASNLookup
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: Ahrefs
+#    ttl: 4320
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: BeVigil
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: BigDataCloud
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: BinaryEdge
+#    ttl: 10080
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: BuiltWith
+#    ttl: 10080
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: C99
+#    ttl: 4320
+#    creds:
+#      account1: 
+#        apikey: null
+#      account2: 
+#        apikey: null
+#  - name: DNSDB
+#    ttl: 4320
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: DNSRepo
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: Detectify
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: FOFA
+#    ttl: 10080
+#    creds:
+#      account: 
+#        username: null
+#        apikey: null
+#  - name: FullHunt
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: Hunter
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: IntelX
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: IPdata
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: IPinfo
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: LeakIX
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: Netlas
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: PassiveTotal
+#    ttl: 10080
+#    creds:
+#      account: 
+#        username: null
+#        apikey: null
+#  - name: PentestTools
+#    ttl: 10080
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: PublicWWW
+#    ttl: 10080
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: WhoisXMLAPI
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: Yandex
+#    ttl: 1440
+#    creds:
+#      account: 
+#        username: null
+#        apikey: null
+#  - name: ZETAlytics
+#    ttl: 1440
+#    creds:
+#      account: 
+#        apikey: null
+#  - name: ZoomEye
+#    ttl: 1440
+#    creds:
+#      account: 
+#        username: null
+#        password: null                     
