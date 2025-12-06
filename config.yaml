@@ -7,7 +7,7 @@ scope:
 # The root domain(s) you are investigating. Amass will find subdomains
 # ending in these suffixes.
   domains: # registered domain names in scope
-    - example.com
+    - globomantics.com
 #  ips: # IP addresses in scope, multiple methods of inserting IP addresses can be used
 #    - 192.0.2.1
 #    - 192.0.2.2
